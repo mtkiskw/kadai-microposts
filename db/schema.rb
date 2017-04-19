@@ -10,7 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419025144) do
+ActiveRecord::Schema.define(version: 20170419074902) do
+
+  create_table "favorites", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "micropost_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["micropost_id"], name: "index_favorites_on_micropost_id", using: :btree
+    t.index ["user_id", "micropost_id"], name: "index_favorites_on_user_id_and_micropost_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_favorites_on_user_id", using: :btree
+  end
+
+  create_table "favoritetables", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "favorite_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["favorite_id"], name: "index_favoritetables_on_favorite_id", using: :btree
+    t.index ["user_id", "favorite_id"], name: "index_favoritetables_on_user_id_and_favorite_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_favoritetables_on_user_id", using: :btree
+  end
 
   create_table "microposts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "content"
@@ -23,8 +43,10 @@ ActiveRecord::Schema.define(version: 20170419025144) do
   create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
     t.integer  "follow_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "favorite_id"
+    t.index ["favorite_id"], name: "index_relationships_on_favorite_id", using: :btree
     t.index ["follow_id"], name: "index_relationships_on_follow_id", using: :btree
     t.index ["user_id", "follow_id"], name: "index_relationships_on_user_id_and_follow_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_relationships_on_user_id", using: :btree
@@ -38,7 +60,12 @@ ActiveRecord::Schema.define(version: 20170419025144) do
     t.datetime "updated_at",      null: false
   end
 
+  add_foreign_key "favorites", "microposts"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "favoritetables", "users"
+  add_foreign_key "favoritetables", "users", column: "favorite_id"
   add_foreign_key "microposts", "users"
   add_foreign_key "relationships", "users"
+  add_foreign_key "relationships", "users", column: "favorite_id"
   add_foreign_key "relationships", "users", column: "follow_id"
 end
