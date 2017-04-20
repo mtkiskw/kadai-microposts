@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       get :followings
       get :followers
       get :registorings
-      get :registors
+      # get :registors # お気に入り登録されているmicropostは表示しなくてよい
     end
     collection do
       get :search

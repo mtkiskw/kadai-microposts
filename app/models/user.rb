@@ -7,8 +7,8 @@ class User < ApplicationRecord
   
   has_many :microposts
   has_many :favorites
-  has_many :registorings, through: :favorites, source: :micropost
-  has_many :reverses_of_favorite, class_name: 'Favorite', foreign_key: 'micropost_id'
+  has_many :registorings, through: :favorites, source: :favorite
+  has_many :reverses_of_favorite, class_name: 'Favorite', foreign_key: 'favorite_id'
   has_many :registors, through: :reverses_of_favorite, source: :user
   
   has_many :relationships
@@ -37,12 +37,12 @@ class User < ApplicationRecord
   
   def favorite(other_micropost)
     unless self == other_micropost
-      self.favorite.find_or_create_by(micropost_id: other_micropost.id)
+      self.favorite.find_or_create_by(favorite_id: other_micropost.id)
     end
   end
   
   def unfavorite(other_micropost)
-    favorite = self.favorites.find_by(micropost_id: other_micropost.id)
+    favorite = self.favorites.find_by(favorite_id: other_micropost.id)
     favorite.destroy if favorite
   end
   

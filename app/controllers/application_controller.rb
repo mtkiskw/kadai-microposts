@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     @count_followings = user.followings.count
     @count_followers = user.followers.count
     @count_registorings = user.registorings.count
-    @count_registors = user.registors.count
+    #@count_registors = user.registors.count
   end
   
 end
