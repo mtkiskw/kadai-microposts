@@ -6,9 +6,10 @@ class User < ApplicationRecord
   has_secure_password
   
   has_many :microposts
+  
   has_many :favorites
-  has_many :registorings, through: :favorites, source: :favorite
-  has_many :reverses_of_favorite, class_name: 'Favorite', foreign_key: 'favorite_id'
+  has_many :registorings, through: :favorites, source: :micropost
+  has_many :reverses_of_favorite, class_name: 'Favorite', foreign_key: 'micropost_id'
   has_many :registors, through: :reverses_of_favorite, source: :user
   
   has_many :relationships
@@ -35,14 +36,15 @@ class User < ApplicationRecord
     Micropost.where(user_id: self.following_ids + [self.id])
   end
   
+  # お気に入り登録のためのメソッド
+  # すでに登録しているかどうか？だけ気にする
   def favorite(other_micropost)
-    unless self == other_micropost
-      self.favorite.find_or_create_by(favorite_id: other_micropost.id)
-    end
+    self.favorites.find_or_create_by(micropost_id: other_micropost.id)
   end
   
+  # お気に入り解除のためのメソッド
   def unfavorite(other_micropost)
-    favorite = self.favorites.find_by(favorite_id: other_micropost.id)
+    favorite = self.favorites.find_by(micropost_id: other_micropost.id)
     favorite.destroy if favorite
   end
   

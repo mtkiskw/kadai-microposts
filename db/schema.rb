@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20170419074902) do
     t.integer  "follow_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    #t.integer  "favorite_id"
-    #t.index ["favorite_id"], name: "index_relationships_on_favorite_id", using: :btree
+    t.integer  "favorite_id"
+    t.index ["favorite_id"], name: "index_relationships_on_favorite_id", using: :btree
     t.index ["follow_id"], name: "index_relationships_on_follow_id", using: :btree
     t.index ["user_id", "follow_id"], name: "index_relationships_on_user_id_and_follow_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_relationships_on_user_id", using: :btree
